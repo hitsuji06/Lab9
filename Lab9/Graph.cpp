@@ -73,7 +73,10 @@ void Graph::DFTraversal(vertex *n)
 
     for(int x = 0; x < n->adj.size(); x++ )
     {
-        // TODO
+        if (n->adj[x].v->visited==false)
+        {
+            DFTraversal(n->adj[x].v);
+        }
     }
 
 }
@@ -98,10 +101,22 @@ void Graph::removeEdge(int key1, int key2)
       }
   }
 
-  // TODO: Modify the adjacency lists (remember that the graph is undirected)
-  // You can use erase to remove an item from a vector
-  // Ex: say you need to remove ith index item from a vector "myvector", you can use myvector.erase(myvector.begin()+i)
-
+    for (int i = 0; i < v1->adj.size(); i++)
+    {
+        if (v1->adj[i].v->key==key2)
+        {
+            v1->adj.erase(v1->adj.begin()+i);
+        }
+    }
+    for (int i = 0; i < v2->adj.size(); i++)
+    {
+       if (v2->adj[i].v->key==key1)
+       {
+           v2->adj.erase(v2->adj.begin()+i);
+       }
+       
+    }
+    
 }
 
 
@@ -117,6 +132,12 @@ bool Graph::isBridge(int key1, int key2)
 
   // num. of connected componenets in the graph before removing the edge
   int initial_components = 0;
+  for (int i = 0; i < vertices.size(); i++)
+  {
+      DFTraversal(vertices[i]);
+      initial_components++;
+  }
+  
 
   // TODO Step1: Get initial_components. Complete and use the DFTraversal function.
 
@@ -133,6 +154,11 @@ bool Graph::isBridge(int key1, int key2)
 
   // num. of connected componenets in the modified graph (i.e after removing the edge)
   int components_after_removal = 0;
+for (int i = 0; i < vertices.size(); i++)
+  {
+      DFTraversal(vertices[i]);
+      components_after_removal++;
+  }
 
   // TODO Step 3: Get components_after_removal (use DFTraversal again)
 
@@ -142,6 +168,15 @@ bool Graph::isBridge(int key1, int key2)
   addEdge(key1, key2);
 
   // TODO Step5: check if the no of connected components increases after removing the edge and return true
+  if (components_after_removal>initial_components)
+  {
+      return true;
+  }
+  else
+  {
+      return false;
+  }
+  
 
 
  return false;
